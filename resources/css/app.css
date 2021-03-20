@@ -2,7 +2,13 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
+@import "filepond/dist/filepond.min.css";
+
 
 a svg, button svg {
     width: 20px;
+}
+
+.p-sm-button{
+    @apply px-1 py-1 !important;
 }

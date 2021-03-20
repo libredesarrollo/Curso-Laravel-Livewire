@@ -14,7 +14,15 @@ class UsersList extends Component
 
     //public $users;
 
+    public $columns = [
+        'id',
+        'name',
+        'email'
+    ];
+
     public $name = "";
+    public $sortColumn = "id";
+    public $sortDirection = "asc";
 
     protected $queryString = ['name'];
 
@@ -26,7 +34,7 @@ class UsersList extends Component
 
     public function render()
     {
-        $users = User::orderBy('created_at', 'desc');
+        $users = User::orderBy($this->sortColumn, $this->sortDirection);
 
         if ($this->name) {
             $users->where('name', 'like', '%' . $this->name . '%')
@@ -36,6 +44,12 @@ class UsersList extends Component
         $users = $users->paginate(10);
 
         return view('livewire.users-list', ['users' => $users]); //->layout('layouts.app');
+    }
+
+    public function sort($column)
+    {
+        $this->sortColumn = $column;
+        $this->sortDirection = $this->sortDirection == 'asc' ? 'desc' : 'asc';
     }
 
     public function cleanFilter()

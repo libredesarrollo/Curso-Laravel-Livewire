@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\User\UploadController;
 use App\Http\Livewire\UserSave;
 use App\Http\Livewire\UsersList;
 use Illuminate\Support\Facades\Route;
@@ -32,12 +33,10 @@ Route::group(['middleware' => ['auth:sanctum', 'verified'], 'prefix' => 'dashboa
         /*Route::get('cuser', function () {
             return view('dashboard.users.cindex');
         });*/
-        
     });
     Route::get('cuser', UsersList::class)->name('user.list');
     Route::get('create-user', UserSave::class)->name('user.create');
     Route::get('update-user/{id}', UserSave::class)->name('user.edit');
-    
+
+    Route::post('user/upload-avatar/{user}', [UploadController::class, 'update'])->name('user.upload-avatar');
 });
-
-

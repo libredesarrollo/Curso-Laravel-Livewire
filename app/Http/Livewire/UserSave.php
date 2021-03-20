@@ -12,7 +12,9 @@ class UserSave extends Component
 
     use WithFileUploads;
 
-    public $name;
+    public $name = "Juan";
+    public $userId;
+
     public $email;
     public $password;
 
@@ -20,7 +22,9 @@ class UserSave extends Component
 
     public $avatar;
 
-    public $msj ="";
+    public $msj = "";
+
+    protected $listeners = ['refreshData' => 'cleanData'];
 
     protected $rules = [
         'name' => 'required|min:3',
@@ -64,15 +68,17 @@ class UserSave extends Component
             ]);
             $this->msj = "Usuario creado correctamente";
             //$this->name = $this->password = $this->email = "";
-            
         }
 
-        if ($this->avatar) {
-            //$avatarName = time() . '_avatar.' . $this->avatar->getClientOriginalExtension();
-            //$this->avatar->storeAs('avatar', $avatarName, 'public_uploads');
+        $this->emit('userSave', $this->msj);
 
-            $this->user->updateProfilePhoto($this->avatar);
-        }
+        //*** carga de archivos en Livewire nativo HTML
+        //if ($this->avatar) {
+        //$avatarName = time() . '_avatar.' . $this->avatar->getClientOriginalExtension();
+        //$this->avatar->storeAs('avatar', $avatarName, 'public_uploads');
+
+        //$this->user->updateProfilePhoto($this->avatar);
+        //}
 
         //return redirect()->route('user.list');
     }
@@ -83,6 +89,7 @@ class UserSave extends Component
         $user = null;
         if ($id) {
             $user = User::findOrFail($id);
+            $this->userId = $id;
         }
 
         $this->user = $user;
@@ -93,5 +100,11 @@ class UserSave extends Component
             //$this->password = $this->user->password;
 
         }
+    }
+
+    public function cleanData()
+    {
+        $this->emit('dataSend');
+        $this->reset(['name', 'email']);
     }
 }
